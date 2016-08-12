@@ -16,8 +16,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        debugPrint(readValueFromConfigurationFile())
         
+        debugPrint("serverURL: " + readValueFromConfigurationFile().0)
+        
+        debugPrint("configParameter: " + readValueFromConfigurationFile().1)
+        
+        #if DEBUG
+            debugPrint("这是:--> Debug")
+        #elseif ADHOC
+            debugPrint("这是:-->  AdHoc")
+        #else
+            debugPrint("这是:-->  Release")
+        #endif
         return true
     }
 
@@ -43,14 +53,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func readValueFromConfigurationFile() -> String {
-
+    func readValueFromConfigurationFile() -> (String,String) {
         let path = Bundle.main.path(forResource: "Configuration", ofType: "plist")
         let config = NSDictionary(contentsOfFile: path!)
         let serverURL = config?.value(forKey: "serverURL")as! String
-        debugPrint(serverURL)
-        
-        return config?.value(forKey:"configParameter") as! String
+        let configParameter = config?.value(forKey:"configParameter") as! String
+        return (serverURL,configParameter)
     }
     
 
